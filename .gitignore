@@ -2,4 +2,3 @@ backend/DoctorAppointments.Api/bin/
 backend/DoctorAppointments.Api/obj/
 frontend/doctor-appointments-ui/node_modules/
 frontend/doctor-appointments-ui/dist/
-backend/DoctorAppointments.Api/doctorappointments.db

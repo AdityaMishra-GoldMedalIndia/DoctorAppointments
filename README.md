@@ -1,6 +1,6 @@
 # DoctorAppointments
 
-Doctor Appointment Application built with **.NET 8 Web API + Dapper (no Entity Framework)** and a **React.js + Vite** frontend.
+Doctor Appointment Application built with **.NET 8 Web API + Dapper (no Entity Framework)** and a **React.js + Vite** frontend. Data access uses **SQL Server stored procedures** executed through a single generic data access helper.
 
 ## Implemented features
 
@@ -15,7 +15,8 @@ Doctor Appointment Application built with **.NET 8 Web API + Dapper (no Entity F
 - CORS configuration for frontend access
 - Pagination for patient and appointment listing APIs
 - Swagger/OpenAPI documentation
-- Seeded SQLite demo database using Dapper
+- Seeded SQL Server database using Dapper stored procedures
+- All data access goes through stored procedures via a generic `DataAccess` helper
 
 ### Frontend (React.js)
 - API consumption with a shared Axios client
@@ -49,6 +50,8 @@ frontend/doctor-appointments-ui
 ```bash
 cd /tmp/workspace/AdityaMishra-GoldMedalIndia/DoctorAppointments/backend/DoctorAppointments.Api
 export DOCTOR_APPOINTMENTS_JWT_SECRET='replace-with-a-long-random-secret-for-non-dev-use'
+# Point ConnectionStrings:DefaultConnection at your SQL Server instance, e.g.
+export ConnectionStrings__DefaultConnection='Server=localhost;Database=DoctorAppointments;Trusted_Connection=True;TrustServerCertificate=True;'
 dotnet restore
 dotnet run --urls http://127.0.0.1:5050
 ```
@@ -84,7 +87,8 @@ Frontend URL:
 - `GET /api/doctors`
 
 ## Notes
-- SQLite database file is created automatically on first backend run.
+- SQL Server schema and stored procedures are created automatically on first backend run (and seeded with demo data).
+- Configure `ConnectionStrings:DefaultConnection` to point at your SQL Server instance.
 - Default CORS origins are configured for `http://localhost:5173` and `http://127.0.0.1:5173`.
 - Refresh tokens are stored as SHA-256 hashes in the database.
 - Configure the signing key with `DOCTOR_APPOINTMENTS_JWT_SECRET` for predictable tokens across restarts and for non-development deployments.
