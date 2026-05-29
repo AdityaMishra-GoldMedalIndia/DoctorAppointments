@@ -45,29 +45,82 @@ frontend/doctor-appointments-ui
 | Patient | `rahul@doctorapp.com` | `Patient@123` |
 | Patient | `pooja@doctorapp.com` | `Patient@123` |
 
-## Run backend
+## Run locally (step by step)
+
+Follow these steps to get the application running on your local machine.
+
+### Prerequisites
+
+Make sure the following are installed before you start:
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (for the backend)
+- [Node.js 18+](https://nodejs.org/) and npm (for the frontend)
+- [SQL Server](https://www.microsoft.com/sql-server/) (Express, Developer, or LocalDB) reachable from your machine
+- [Git](https://git-scm.com/) to clone the repository
+
+### Step 1 — Clone the repository
 
 ```bash
-cd /tmp/workspace/AdityaMishra-GoldMedalIndia/DoctorAppointments/backend/DoctorAppointments.Api
+git clone https://github.com/AdityaMishra-GoldMedalIndia/DoctorAppointments.git
+cd DoctorAppointments
+```
+
+### Step 2 — Run the backend (.NET 8 Web API)
+
+Open a terminal and run:
+
+```bash
+cd backend/DoctorAppointments.Api
+
+# 1. Set a long random secret used to sign JWT tokens
 export DOCTOR_APPOINTMENTS_JWT_SECRET='replace-with-a-long-random-secret-for-non-dev-use'
-# Point ConnectionStrings:DefaultConnection at your SQL Server instance, e.g.
+
+# 2. Point the connection string at your SQL Server instance
 export ConnectionStrings__DefaultConnection='Server=localhost;Database=DoctorAppointments;Trusted_Connection=True;TrustServerCertificate=True;'
+
+# 3. Restore dependencies and run the API
 dotnet restore
 dotnet run --urls http://127.0.0.1:5050
 ```
 
-Swagger UI:
+On Windows PowerShell, set the environment variables with `$env:` instead of `export`:
+
+```powershell
+$env:DOCTOR_APPOINTMENTS_JWT_SECRET='replace-with-a-long-random-secret-for-non-dev-use'
+$env:ConnectionStrings__DefaultConnection='Server=localhost;Database=DoctorAppointments;Trusted_Connection=True;TrustServerCertificate=True;'
+```
+
+The SQL Server schema, stored procedures, and demo data are created automatically on the first run.
+
+Once it is running, open the Swagger UI to explore the API:
+
 - `http://127.0.0.1:5050/swagger`
 
-## Run frontend
+### Step 3 — Run the frontend (React + Vite)
+
+Open a **second** terminal (leave the backend running) and run:
 
 ```bash
-cd /tmp/workspace/AdityaMishra-GoldMedalIndia/DoctorAppointments/frontend/doctor-appointments-ui
+cd frontend/doctor-appointments-ui
+
+# 1. Install dependencies
 npm install
+
+# 2. Start the dev server pointing at the backend
 VITE_API_BASE_URL=http://127.0.0.1:5050 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
-Frontend URL:
+On Windows PowerShell, set the variable separately before running the dev server:
+
+```powershell
+$env:VITE_API_BASE_URL='http://127.0.0.1:5050'
+npm run dev -- --host 127.0.0.1 --port 5173
+```
+
+### Step 4 — Open the app
+
+Open the frontend in your browser and log in with one of the [demo credentials](#demo-credentials) above:
+
 - `http://127.0.0.1:5173`
 
 ## Important API endpoints
