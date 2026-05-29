@@ -50,7 +50,7 @@ export default function App() {
     }
 
     setAuth(null)
-  }, [api, auth?.refreshToken, setAuth])
+  }, [api, auth, setAuth])
 
   return (
     <BrowserRouter>
@@ -205,6 +205,7 @@ function LoginPage({ api, onSuccess }) {
           Email
           <input
             type="email"
+            autoComplete="email"
             value={form.email}
             onChange={(event) =>
               setForm((current) => ({ ...current, email: event.target.value }))
@@ -217,6 +218,7 @@ function LoginPage({ api, onSuccess }) {
           Password
           <input
             type="password"
+            autoComplete="current-password"
             value={form.password}
             onChange={(event) =>
               setForm((current) => ({
