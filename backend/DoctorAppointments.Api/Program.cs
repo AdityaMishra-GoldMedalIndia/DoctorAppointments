@@ -1,5 +1,6 @@
 using System.Threading.RateLimiting;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Dapper;
 using DoctorAppointments.Api.Contracts;
@@ -12,8 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=doctorappointments.db";
@@ -60,6 +59,27 @@ builder.Services.AddRateLimiter(options =>
 });
 
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
+jwtOptions.SecretKey = builder.Configuration["DOCTOR_APPOINTMENTS_JWT_SECRET"] ?? jwtOptions.SecretKey;
+
+if (string.IsNullOrWhiteSpace(jwtOptions.SecretKey))
+{
+    if (!builder.Environment.IsDevelopment())
+    {
+        throw new InvalidOperationException("Set DOCTOR_APPOINTMENTS_JWT_SECRET before starting the API outside development.");
+    }
+
+    // English + Hindi: development ke liye temporary secret generate ho raha hai, repo me hardcoded secret store nahi karna chahiye.
+    jwtOptions.SecretKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+}
+
+builder.Services.Configure<JwtOptions>(options =>
+{
+    options.SecretKey = jwtOptions.SecretKey;
+    options.Issuer = jwtOptions.Issuer;
+    options.Audience = jwtOptions.Audience;
+    options.AccessTokenMinutes = jwtOptions.AccessTokenMinutes;
+    options.RefreshTokenDays = jwtOptions.RefreshTokenDays;
+});
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

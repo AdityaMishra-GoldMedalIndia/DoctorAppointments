@@ -48,6 +48,7 @@ frontend/doctor-appointments-ui
 
 ```bash
 cd /tmp/workspace/AdityaMishra-GoldMedalIndia/DoctorAppointments/backend/DoctorAppointments.Api
+export DOCTOR_APPOINTMENTS_JWT_SECRET='replace-with-a-long-random-secret-for-non-dev-use'
 dotnet restore
 dotnet run --urls http://127.0.0.1:5050
 ```
@@ -86,4 +87,5 @@ Frontend URL:
 - SQLite database file is created automatically on first backend run.
 - Default CORS origins are configured for `http://localhost:5173` and `http://127.0.0.1:5173`.
 - Refresh tokens are stored as SHA-256 hashes in the database.
+- Configure the signing key with `DOCTOR_APPOINTMENTS_JWT_SECRET` for predictable tokens across restarts and for non-development deployments.
 - Code includes small Hindi + English comments in key implementation areas as requested.
