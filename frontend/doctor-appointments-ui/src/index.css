@@ -1,0 +1,17 @@
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
