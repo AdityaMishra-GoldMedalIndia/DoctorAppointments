@@ -1,5 +1,5 @@
 using System.Data;
-using Microsoft.Data.Sqlite;
+using Microsoft.Data.SqlClient;
 
 namespace DoctorAppointments.Api.Infrastructure;
 
@@ -12,5 +12,5 @@ public sealed class AppDb
         _connectionString = connectionString;
     }
 
-    public IDbConnection CreateConnection() => new SqliteConnection(_connectionString);
+    public IDbConnection CreateConnection() => new SqlConnection(_connectionString);
 }
