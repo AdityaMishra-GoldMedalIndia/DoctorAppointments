@@ -20,6 +20,7 @@ var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<st
     ?? ["http://localhost:5173", "http://127.0.0.1:5173"];
 var rateLimitPermit = builder.Configuration.GetValue("RateLimiting:PermitLimit", 10);
 var rateLimitWindowSeconds = builder.Configuration.GetValue("RateLimiting:WindowSeconds", 60);
+const string jwtSecretPlaceholder = "SET_VIA_DOCTOR_APPOINTMENTS_JWT_SECRET_ENV";
 
 builder.Services.AddSingleton(new AppDb(connectionString));
 builder.Services.AddSingleton<IPasswordHasher<object>, PasswordHasher<object>>();
@@ -60,6 +61,11 @@ builder.Services.AddRateLimiter(options =>
 
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
 jwtOptions.SecretKey = builder.Configuration["DOCTOR_APPOINTMENTS_JWT_SECRET"] ?? jwtOptions.SecretKey;
+
+if (jwtOptions.SecretKey == jwtSecretPlaceholder)
+{
+    jwtOptions.SecretKey = string.Empty;
+}
 
 if (string.IsNullOrWhiteSpace(jwtOptions.SecretKey))
 {
